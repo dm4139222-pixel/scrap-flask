@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ultra SaaS Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+<style>
+html { scroll-behavior: smooth; }
+
+body {
+  transition: all 0.4s ease;
+}
+
+/* fade animation */
+.fade {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* glow cards */
+.glow {
+  box-shadow: 0 0 18px rgba(99,102,241,0.25);
+  transition: 0.3s;
+}
+
+.glow:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 35px rgba(99,102,241,0.5);
+}
+
+/* sidebar active */
+.active {
+  background: rgba(255,255,255,0.15);
+  border-left: 4px solid #fff;
+}
+
+/* dropdown */
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 50px;
+  background: white;
+  width: 180px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.dropdown a {
+  display: block;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.dropdown a:hover {
+  background: #f3f4f6;
+}
+
+/* dark mode fix */
+.dark {
+  background: #0b1220 !important;
+  color: white !important;
+}
+.dark .card {
+  background: #111827 !important;
+  color: white !important;
+}
+</style>
+
+</head>
+
+<body id="body" class="bg-gray-100">
+
+<div class="flex">
+
+<!-- SIDEBAR -->
+<div class="w-64 min-h-screen bg-gradient-to-b from-indigo-950 via-indigo-900 to-purple-900 text-white p-5 fixed shadow-2xl">
+
+    <!-- PROFILE CARD -->
+    <div class="text-center mb-8">
+
+        <div class="relative w-20 h-20 mx-auto">
+
+            <!-- avatar -->
+            <div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center text-2xl shadow-lg border border-white/20">
+                👤
+            </div>
+
+            <!-- online dot -->
+            <div class="w-4 h-4 bg-green-400 rounded-full absolute bottom-1 right-1 border-2 border-indigo-900 animate-pulse"></div>
+
+        </div>
+
+        <h2 class="mt-3 font-bold text-lg">{{ name }}</h2>
+        <p class="text-xs text-white/60">{{ email }}</p>
+
+        <div class="mt-2 text-xs text-green-300">
+            ● Online
+        </div>
+
+    </div>
+
+    <!-- MENU TITLE -->
+    <p class="text-xs text-white/40 mb-3 uppercase tracking-wider">
+        Main Menu
+    </p>
+
+    <!-- MENU -->
+    <ul class="space-y-2 text-sm">
+
+        <!-- ACTIVE -->
+        <li class="flex items-center gap-3 p-3 rounded-xl bg-white/20 shadow-lg cursor-pointer hover:scale-105 transition">
+            <i class="fa fa-home text-indigo-200"></i>
+            <span class="font-semibold">Dashboard</span>
+        </li>
+
+        <li class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition">
+            <i class="fa fa-chart-line text-green-300"></i>
+            <span>Analytics</span>
+        </li>
+
+        <li class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition">
+            <i class="fa fa-box text-yellow-300"></i>
+            <span>Requests</span>
+        </li>
+
+        <li class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition">
+            <i class="fa fa-wallet text-pink-300"></i>
+            <span>Payments</span>
+        </li>
+
+        <li class="flex items-center gap-3 p-3 rounded-xl hover:bg-white/10 cursor-pointer transition">
+            <i class="fa fa-gear text-gray-300"></i>
+            <span>Settings</span>
+        </li>
+
+    </ul>
+
+    <!-- DIVIDER -->
+    <div class="my-6 border-t border-white/10"></div>
+
+    <!-- QUICK ACTION -->
+    <p class="text-xs text-white/40 mb-3">Quick Actions</p>
+
+    <ul class="space-y-2 text-sm">
+
+        <li class="p-2 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            ➕ New Request
+        </li>
+
+        <li class="p-2 rounded-lg bg-white/5 hover:bg-white/10 cursor-pointer transition">
+            📊 View Reports
+        </li>
+
+    </ul>
+
+    <!-- LOGOUT -->
+    <div class="absolute bottom-5 left-5 right-5">
+
+        <a href="/logout"
+           class="block text-center bg-red-500 hover:bg-red-600 p-2 rounded-xl shadow-lg transition">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+<!-- MAIN -->
+<div class="ml-64 flex-1">
+
+<!-- TOP BAR -->
+<div class="flex justify-between items-center px-6 py-3 bg-white/70 backdrop-blur-xl shadow-md sticky top-0 z-50 border-b border-gray-100">
+
+    <!-- LEFT: SEARCH -->
+    <div class="flex items-center gap-3 w-1/3">
+
+        <div class="flex items-center bg-gray-100 px-3 py-2 rounded-xl w-full hover:ring-2 hover:ring-indigo-300 transition">
+
+            <i class="fa fa-search text-gray-500"></i>
+
+            <input class="bg-transparent ml-2 outline-none w-full text-sm"
+                   placeholder="Search dashboard... (Ctrl + K)">
+
+            <span class="text-xs bg-white px-2 py-1 rounded border ml-2 text-gray-400">
+                ⌘K
+            </span>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT ACTIONS -->
+    <div class="flex items-center gap-5 relative">
+
+        <!-- LIVE STATUS -->
+        <div class="flex items-center gap-2 text-xs text-green-600 font-semibold">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            Live
+        </div>
+
+        <!-- QUICK ACTION -->
+        <button class="bg-indigo-500 text-white px-3 py-2 rounded-xl shadow hover:scale-105 transition">
+            + New
+        </button>
+
+        <!-- DARK MODE -->
+        <button onclick="toggleMode()"
+                class="bg-gray-200 px-3 py-2 rounded-xl hover:bg-gray-300 transition hover:scale-105">
+            🌙
+        </button>
+
+        <!-- NOTIFICATION -->
+        <div class="relative">
+
+            <div class="relative cursor-pointer" onclick="toggleNoti()">
+                <i class="fa fa-bell text-lg"></i>
+
+                <!-- badge -->
+                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1 rounded-full">
+                    3
+                </span>
+            </div>
+
+            <!-- dropdown -->
+            <div id="noti"
+                 class="hidden absolute right-0 mt-3 w-64 bg-white shadow-xl rounded-xl overflow-hidden animate-fade-in">
+
+                <div class="p-3 text-sm font-bold border-b">Notifications</div>
+
+                <div class="p-3 text-sm hover:bg-gray-100">✔ New scrap request</div>
+                <div class="p-3 text-sm hover:bg-gray-100">💰 Payment received</div>
+                <div class="p-3 text-sm hover:bg-gray-100">🚛 Collector assigned</div>
+
+            </div>
+
+        </div>
+
+        <!-- PROFILE -->
+        <div class="relative cursor-pointer" onclick="toggleProfile()">
+
+            <div class="flex items-center gap-2 bg-gray-100 px-3 py-2 rounded-xl hover:shadow-md transition">
+
+                <div class="w-9 h-9 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold">
+                    {{ name[0] }}
+                </div>
+
+                <div class="text-left">
+                    <p class="text-sm font-bold">{{ name }}</p>
+                    <p class="text-xs text-gray-500">Online</p>
+                </div>
+
+                <i class="fa fa-chevron-down text-xs text-gray-500"></i>
+
+            </div>
+
+            <!-- profile dropdown -->
+            <div id="profile"
+                 class="hidden absolute right-0 mt-3 w-48 bg-white shadow-xl rounded-xl overflow-hidden">
+
+                <a class="block px-4 py-2 hover:bg-gray-100">👤 Profile</a>
+                <a class="block px-4 py-2 hover:bg-gray-100">⚙ Settings</a>
+                <a href="/logout" class="block px-4 py-2 hover:bg-red-100 text-red-500">🚪 Logout</a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CONTENT -->
+<div class="p-6 space-y-10 fade">
+
+<!-- HERO -->
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl glow">
+    <h1 class="text-3xl font-bold">Welcome {{ name }} 🚀</h1>
+    <p>Real-time SaaS Scrap Collector System</p>
+</div>
+
+<!-- STATS -->
+<div class="grid grid-cols-4 gap-6">
+
+    <!-- TOTAL REQUESTS -->
+    <div class="relative bg-gradient-to-br from-indigo-500 to-indigo-700 text-white p-5 rounded-2xl shadow-lg glow hover:scale-105 transition">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-80">Total Requests</p>
+                <h1 class="text-3xl font-bold">42</h1>
+            </div>
+            <i class="fa fa-inbox text-3xl opacity-80"></i>
+        </div>
+
+        <p class="text-xs mt-3 opacity-70">All scrap pickup requests</p>
+
+    </div>
+
+    <!-- COMPLETED -->
+    <div class="relative bg-gradient-to-br from-green-500 to-emerald-600 text-white p-5 rounded-2xl shadow-lg glow hover:scale-105 transition">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-80">Completed</p>
+                <h1 class="text-3xl font-bold">28</h1>
+            </div>
+            <i class="fa fa-check-circle text-3xl opacity-80"></i>
+        </div>
+
+        <p class="text-xs mt-3 opacity-70">Successfully processed requests</p>
+
+    </div>
+
+    <!-- PENDING -->
+    <div class="relative bg-gradient-to-br from-yellow-400 to-orange-500 text-white p-5 rounded-2xl shadow-lg glow hover:scale-105 transition">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-90">Pending</p>
+                <h1 class="text-3xl font-bold">14</h1>
+            </div>
+            <i class="fa fa-clock text-3xl opacity-90"></i>
+        </div>
+
+        <p class="text-xs mt-3 opacity-80">Waiting for approval</p>
+
+    </div>
+
+    <!-- EARNINGS -->
+    <div class="relative bg-gradient-to-br from-purple-500 to-pink-600 text-white p-5 rounded-2xl shadow-lg glow hover:scale-105 transition">
+
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm opacity-80">Earnings</p>
+                <h1 class="text-3xl font-bold">₹6,850</h1>
+            </div>
+            <i class="fa fa-wallet text-3xl opacity-80"></i>
+        </div>
+
+        <p class="text-xs mt-3 opacity-70">Total revenue generated</p>
+
+    </div>
+
+</div>
+
+<!-- ANALYTICS SECTION -->
+<div class="grid grid-cols-3 gap-6">
+
+    <!-- MAIN ANALYTICS CARD -->
+    <div class="col-span-2 bg-gradient-to-br from-white to-indigo-50 p-6 rounded-2xl shadow-xl glow">
+
+        <div class="flex justify-between items-center mb-4">
+
+            <div>
+                <h2 class="text-xl font-bold">📊 Live Analytics</h2>
+                <p class="text-xs text-gray-500">Real-time performance overview</p>
+            </div>
+
+            <div class="text-xs bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full">
+                ● Live
+            </div>
+
+        </div>
+
+        <!-- CHART -->
+        <div class="flex items-end gap-3 h-64">
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-200 h-24 rounded-t-lg hover:scale-110 transition"></div>
+                <p class="text-xs mt-2 text-gray-500">Mon</p>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-300 h-32 rounded-t-lg hover:scale-110 transition"></div>
+                <p class="text-xs mt-2 text-gray-500">Tue</p>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-400 h-40 rounded-t-lg hover:scale-110 transition"></div>
+                <p class="text-xs mt-2 text-gray-500">Wed</p>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-500 h-52 rounded-t-lg hover:scale-110 transition shadow-lg"></div>
+                <p class="text-xs mt-2 text-gray-500">Thu</p>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-600 h-36 rounded-t-lg hover:scale-110 transition"></div>
+                <p class="text-xs mt-2 text-gray-500">Fri</p>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-8 bg-indigo-700 h-44 rounded-t-lg hover:scale-110 transition"></div>
+                <p class="text-xs mt-2 text-gray-500">Sat</p>
+            </div>
+
+        </div>
+
+        <!-- INSIGHT BOX -->
+        <div class="grid grid-cols-3 gap-3 mt-6">
+
+            <div class="bg-white p-3 rounded-xl shadow">
+                <p class="text-xs text-gray-500">Revenue</p>
+                <h3 class="font-bold text-green-600">+12%</h3>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl shadow">
+                <p class="text-xs text-gray-500">Requests</p>
+                <h3 class="font-bold text-indigo-600">+8%</h3>
+            </div>
+
+            <div class="bg-white p-3 rounded-xl shadow">
+                <p class="text-xs text-gray-500">Efficiency</p>
+                <h3 class="font-bold text-purple-600">92%</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTIVITY FEED (UPGRADED TIMELINE STYLE) -->
+    <div class="bg-white p-6 rounded-2xl shadow-xl glow">
+
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-bold">⚡ Activity Timeline</h2>
+            <span class="text-xs text-green-600">Live</span>
+        </div>
+
+        <div class="space-y-4">
+
+            <div class="flex items-start gap-3">
+                <div class="w-2 h-2 bg-green-500 rounded-full mt-2 animate-pulse"></div>
+                <div>
+                    <p class="text-sm font-semibold">Request Accepted</p>
+                    <p class="text-xs text-gray-500">2 mins ago</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <div class="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                <div>
+                    <p class="text-sm font-semibold">Payment Completed</p>
+                    <p class="text-xs text-gray-500">10 mins ago</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <div class="w-2 h-2 bg-yellow-500 rounded-full mt-2"></div>
+                <div>
+                    <p class="text-sm font-semibold">Collector Assigned</p>
+                    <p class="text-xs text-gray-500">30 mins ago</p>
+                </div>
+            </div>
+
+            <div class="flex items-start gap-3">
+                <div class="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
+                <div>
+                    <p class="text-sm font-semibold">Request Completed</p>
+                    <p class="text-xs text-gray-500">1 hour ago</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- TABLE -->
+<!-- TABLE SECTION -->
+<div class="bg-gradient-to-br from-white to-indigo-50 p-6 rounded-2xl shadow-xl glow">
+
+    <!-- TITLE -->
+    <div class="flex justify-between items-center mb-4">
+
+        <div>
+            <h2 class="text-xl font-bold text-indigo-700">📦 Recent Requests</h2>
+            <p class="text-xs text-gray-500">Latest scrap collection activity</p>
+        </div>
+
+        <span class="text-xs bg-indigo-100 text-indigo-600 px-3 py-1 rounded-full">
+            Live Data
+        </span>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="overflow-hidden rounded-xl border border-gray-100">
+
+        <table class="w-full text-sm">
+
+            <!-- HEADER -->
+            <thead class="bg-indigo-600 text-white text-left">
+                <tr>
+                    <th class="p-3">Item</th>
+                    <th class="p-3">Type</th>
+                    <th class="p-3">Status</th>
+                    <th class="p-3">Amount</th>
+                </tr>
+            </thead>
+
+            <!-- ROWS -->
+            <tbody>
+
+                <tr class="border-b hover:bg-indigo-50 transition">
+                    <td class="p-3 flex items-center gap-2">
+                        🟡 Plastic Scrap
+                    </td>
+                    <td class="p-3 text-gray-600">Recycle</td>
+                    <td class="p-3">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            ✔ Completed
+                        </span>
+                    </td>
+                    <td class="p-3 font-semibold text-green-600">₹500</td>
+                </tr>
+
+                <tr class="border-b hover:bg-indigo-50 transition">
+                    <td class="p-3 flex items-center gap-2">
+                        ⚙ Metal Scrap
+                    </td>
+                    <td class="p-3 text-gray-600">Heavy</td>
+                    <td class="p-3">
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            ⏳ Pending
+                        </span>
+                    </td>
+                    <td class="p-3 font-semibold text-yellow-600">₹1200</td>
+                </tr>
+
+                <tr class="border-b hover:bg-indigo-50 transition">
+                    <td class="p-3 flex items-center gap-2">
+                        📦 E-Waste
+                    </td>
+                    <td class="p-3 text-gray-600">Electronic</td>
+                    <td class="p-3">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold">
+                            🚛 Assigned
+                        </span>
+                    </td>
+                    <td class="p-3 font-semibold text-blue-600">₹800</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function toggleMode(){
+    document.body.classList.toggle("bg-gray-900");
+    document.body.classList.toggle("text-white");
+}
+
+function toggleProfile(){
+    document.getElementById("profile").classList.toggle("block");
+}
+
+function toggleNoti(){
+    document.getElementById("noti").classList.toggle("block");
+}
+</script>
+
+</body>
+</html>
