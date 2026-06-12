@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, session
+import os
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 users = {}
 
@@ -23,10 +24,7 @@ def register():
         if password != confirm:
             return "Password mismatch"
 
-        users[email] = {
-            "name": name,
-            "password": password
-        }
+        users[email] = {"name": name, "password": password}
 
         return redirect('/login')
 
@@ -61,25 +59,19 @@ def dashboard():
 
     return render_template('dashboard.html', name=user['name'], email=user_email)
 
+
 @app.route('/analytics')
 def analytics():
-  
-
-
     return render_template('analytics.html')
 
+
 @app.route('/request')
-def request():
-  
-
-
+def request_page():
     return render_template('request.html')
+
 
 @app.route('/user_dashboard')
 def user_dashboard():
-  
-
-
     return render_template('user_dashboard.html')
 
 
@@ -90,4 +82,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
